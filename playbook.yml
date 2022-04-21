@@ -1,0 +1,36 @@
+- name: configure apache on ubuntu instances
+  hosts: ubuntuclients
+  tasks:
+    - name: Upgrade all packages
+      apt:
+        name: '*'
+        state: latest
+
+    - name: Install the latest version of Apache
+      apt:
+        name: apache2
+        state: latest 
+
+    - name: Start service httpd, if not started
+      ansible.builtin.service:
+        name: apache2
+        state: started 
+
+    - name: Enable service httpd, and not touch the state
+      ansible.builtin.service:
+        name: apache2
+        enabled: yes 
+
+    - name: Copy index file from ubuntu controller to the  ubuntu clients
+      ansible.builtin.copy:
+        src: /root/index.html
+        dest: /var/www.html/
+
+- name: Install git on ubuntu clients 
+  hosts: ubuntuclients
+  tasks:
+    - name: install git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
